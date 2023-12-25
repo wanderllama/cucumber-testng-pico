@@ -5,9 +5,6 @@ import jw.demo.util.TestContext;
 
 public class MyStepdefs {
 
-    TestContext testContext;
-
-
     @Given("this is step {string} for test")
     public void thisIsStepForTest(String number) {
         if (Integer.parseInt(number) == 1) {
