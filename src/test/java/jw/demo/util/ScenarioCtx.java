@@ -1,16 +1,39 @@
-package utility;
+package jw.demo.util;
 
-/*
- this class is used to save scenario data any data that you want to have access to during your scenario
- can be stored here. a thread safe object of this class is created before each scenario.
- */
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class ScenarioCtx {
 
-    private static String username;
-    private static String password;
+    private static final Logger LOG = Util.loggerForClass();
+    private ScenarioCtx scenarioCtx;
 
-    public ScenarioCtx() {
+    private Map<String, Object> contextMap = new HashMap<>();
 
+
+    private ScenarioCtx getInstance() throws Throwable {
+        if (scenarioCtx == null) {
+            scenarioCtx = new ScenarioCtx();
+        }
+        return scenarioCtx;
+    }
+
+    public void setProperty(String key, Object value) {
+        contextMap.put(key, value);
+    }
+
+    public void setProperty(String key, String value) {
+        contextMap.put(key, value);
+    }
+
+    public void setProperty(String key, int value) {
+        contextMap.put(key, value);
+    }
+
+    public Object getProperty(String key) {
+        return contextMap.get(key);
     }
 
 }

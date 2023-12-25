@@ -1,21 +1,22 @@
 package jw.demo.util.driver;
 
-import jw.demo.enums.Browser;
 import jw.demo.enums.DocuportUrl;
-import jw.demo.util.ConfigProperties;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class Driver extends BaseDriver {
+import static jw.demo.util.Util.loggerForClass;
+
+public class Driver {
+
+    private static final Logger LOG = loggerForClass();
     protected static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
-    private static Browser browser;
-
-    public static void driverInit() {
-        setBrowser();
-    }
 
     public static void setDriver() {
         BaseDriver baseDriver = new BaseDriver();
-        baseDriver.setDriver(ConfigProperties.getData("browser"));
+        baseDriver.setBrowser();
+        baseDriver.createDriver();
         threadLocalDriver.set(baseDriver.getD());
     }
 
@@ -36,25 +37,15 @@ public class Driver extends BaseDriver {
         }
     }
 
-    public static void navigateTo(DocuportUrl url) {
-        getDriver().get(url.url());
+    public static void navigateTo(DocuportUrl goToThis) {
+        getDriver().get(goToThis.url());
     }
 
-    private static void setBrowser() {
-        String b = ConfigProperties.getProperties().getProperty("browser").trim().toLowerCase();
-        switch (b) {
-            case "chrome":
-                browser = Browser.CHROME;
-                break;
-            case "firefox":
-                browser = Browser.FIREFOX;
-                break;
-            case "edge":
-                browser = Browser.EDGE;
-                break;
-            default:
-                System.out.printf("%s is not a valid browser property used in configuration properties file", b);
-        }
+    static String getDriverBrowser() {
+        LOG.info("Getting browser info");
+        Capabilities cap = ((RemoteWebDriver) getDriver()).getCapabilities();
+        return cap.getBrowserName();
     }
+
 
 }

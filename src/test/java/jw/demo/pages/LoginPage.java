@@ -4,7 +4,9 @@ import jw.demo.util.Util;
 import lombok.Getter;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 @Getter
 public final class LoginPage extends BasePage {
@@ -20,4 +22,8 @@ public final class LoginPage extends BasePage {
     @FindBy
     private final By continueBtnAfterLogin = By.xpath("//span[text()=' Continue ']/parent::button[@type='submit']");
 
+    public LoginPage(WebDriver driver) {
+        super(driver);
+        PageFactory.initElements(driver, this);
+    }
 }

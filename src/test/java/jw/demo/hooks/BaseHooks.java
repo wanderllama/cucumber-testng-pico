@@ -1,10 +1,7 @@
 package jw.demo.hooks;
 
-import jw.demo.util.ConfigProperties;
 import jw.demo.util.Util;
 import org.apache.logging.log4j.Logger;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -25,7 +22,7 @@ import java.util.Arrays;
 // Extends Util and Util extends Driver
 public class BaseHooks extends Util {
 
-    Logger LOG = loggerForClass();
+    static Logger LOG = loggerForClass();
 
     private static String scenarioInformation(Method method) {
         StringBuilder info = new StringBuilder(method.getName() + "\nScenario Groups: ");
@@ -35,17 +32,10 @@ public class BaseHooks extends Util {
         return info.toString();
     }
 
-    @BeforeSuite
-    public void suiteSetup() {
-        LOG.info("================ BEFORE ALL ================");
-//        System.out.println("================ BEFORE ALL ================");
-        ConfigProperties.setupProperties(); // property files for data and configuration
-//        AccessToken.in
 
-    }
 
     // runs before each method first
-    @BeforeMethod(alwaysRun = true)
+//    @BeforeMethod(alwaysRun = true)
     public void setup(Method method) {
         LOG.info("-------- Scenario Start --------\nScenario Name: " + scenarioInformation(method));
 //        System.out.println("-------- Scenario Start --------\nScenario Name: " + scenarioInformation(method));

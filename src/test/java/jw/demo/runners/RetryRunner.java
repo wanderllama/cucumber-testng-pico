@@ -14,7 +14,7 @@ import io.cucumber.testng.CucumberOptions;
         , monochrome = true
         , features = "src/test/resources/features"
         , glue = "jw/demo/stepDefinitions"
-        , tags = "@DI"
+        , tags = "@context"
 )
 public class RetryRunner extends AbstractTestNGCucumberTests {
 }

@@ -11,38 +11,41 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestContext;
 
 import java.time.Duration;
 import java.util.NoSuchElementException;
 
+import static jw.demo.enums.ContextConstants.PASSWORD;
+import static jw.demo.enums.ContextConstants.USERNAME;
 import static jw.demo.enums.WaitTime.REGULAR;
 
 public class Util extends Driver {
 
-    POM pom = new POM();
-
-    // create WebDriverWait object
+    // create WebDriverWait object -> Not sure if I will keep these wait helpers
     public static WebDriverWait getWait() {
         return getWait(REGULAR.waitTime());
+    }    private static final Logger LOG = loggerForClass();
+
+    POM pom = new POM();
+
+    public static void waitTillInvisible(WebElement element, Duration d) {
+        try {
+            Util.getWait(d).until(ExpectedConditions.invisibilityOf(element));
+        } catch (TimeoutException e) {
+            LOG.error(String.format("%s failed waitTillInvisible wait after waiting %s%n", element.toString(), d));
+        }
     }
 
     public static WebDriverWait getWait(Duration d) {
         return new WebDriverWait(Driver.getDriver(), d);
     }
 
-    public static void waitTillInvisible(WebElement element, Duration d) {
-        try {
-            Util.getWait(d).until(ExpectedConditions.invisibilityOf(element));
-        } catch (TimeoutException e) {
-            System.out.printf("%s failed invisibilityOf wait after waiting %s%n", element.toString(), d);
-        }
-    }
-
     public static void waitTillInvisible(WebElement element) {
         try {
             Util.getWait(REGULAR.waitTime()).until(ExpectedConditions.invisibilityOf(element));
         } catch (TimeoutException e) {
-            System.out.printf("%s failed invisibilityOf wait after waiting %s%n", element.toString(), REGULAR.getSeconds());
+            LOG.error(String.format("%s failed waitTillInvisible wait after waiting %s%n", element.toString(), REGULAR.getSeconds()));
         }
     }
 
@@ -51,7 +54,7 @@ public class Util extends Driver {
         try {
             webElement = Util.getWait(REGULAR.waitTime()).until(ExpectedConditions.visibilityOf(Driver.getDriver().findElement(element)));
         } catch (TimeoutException e) {
-            System.out.printf("%s failed visibilityOf wait after waiting %s%n", element.toString(), REGULAR.getSeconds());
+            LOG.error(String.format("%s failed waitTillVisible wait after waiting %s%n", element.toString(), REGULAR.getSeconds()));
         }
         return webElement;
     }
@@ -62,9 +65,9 @@ public class Util extends Driver {
             webElement = Driver.getDriver().findElement(element);
             Util.getWait(d).until(ExpectedConditions.visibilityOf(webElement));
         } catch (TimeoutException e) {
-            System.out.printf("%s failed visibilityOf wait after waiting %s%n", element.toString(), d.getSeconds());
+            LOG.error(String.format("%s failed waitTillVisible wait after waiting %s%n", element.toString(), d.getSeconds()));
         } catch (NoSuchElementException e) {
-
+            LOG.error(String.format("%s could not be located NoSuchElementException", element.toString()));
         }
         return webElement;
     }
@@ -74,7 +77,7 @@ public class Util extends Driver {
             JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
             js.executeScript("arguments[0].click();", element);
         } catch (Exception e) {
-            System.out.printf("JavascriptExecutor error while clicking locator %s%n", element.toString());
+            LOG.error(String.format("JavascriptExecutor error while clicking locator %s%n", element.toString()));
         }
     }
 
@@ -84,24 +87,27 @@ public class Util extends Driver {
         try {
             caller = Class.forName(callerName);
         } catch (ClassNotFoundException e) {
+            LOG.error("loggerForClass couldn't identify caller name");
             e.printStackTrace();
         }
         return caller != null ? LogManager.getLogger(caller.getSimpleName()) : null;
     }
 
-    public static void login(POM pom) {
-        getDriver().findElement(pom.getLoginPage().getEmailTextField()).sendKeys(getUsername());
-        getDriver().findElement(pom.getLoginPage().getPasswordTextField()).sendKeys(getPassword());
+    public static void login(POM pom, ITestContext context) {
+        getDriver().findElement(pom.getLoginPage().getEmailTextField()).sendKeys(context.getAttribute(USERNAME).toString());
+        getDriver().findElement(pom.getLoginPage().getPasswordTextField()).sendKeys(context.getAttribute(PASSWORD).toString());
         getDriver().findElement(pom.getLoginPage().getSubmitBtn()).click();
     }
 
     public static String getUsername() {
-        return ConfigProperties.getData("username");
+        return ConfigProperties.getData(USERNAME);
     }
 
     public static String getPassword() {
-        return ConfigProperties.getData("password");
+        return ConfigProperties.getData(PASSWORD);
     }
+
+
 
 
 //

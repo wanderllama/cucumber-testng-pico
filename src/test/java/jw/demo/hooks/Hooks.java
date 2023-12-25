@@ -2,12 +2,11 @@ package jw.demo.hooks;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import jw.demo.enums.DocuportUrl;
 import jw.demo.util.ConfigProperties;
+import jw.demo.util.ScenarioCtx;
 import jw.demo.util.TestContext;
-import jw.demo.util.Util;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.ITestContext;
@@ -16,18 +15,18 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 
 import static jw.demo.enums.ContextConstants.*;
+import static jw.demo.util.Util.loggerForClass;
+import static jw.demo.util.driver.Driver.*;
 
 // Extends BaseHooks, BaseHooks extends Util and Util extends Driver
-public class Hooks extends Util {
+public class Hooks {
 
-    protected static ThreadLocal<TestContext> scenarioCtx;
+
+
     private static Logger LOG = loggerForClass();
 
-    private Hooks(TestContext scenarioCtx) {
-        Hooks.scenarioCtx = scenarioCtx;
-    }
 
-    @BeforeAll
+    //    @BeforeAll
     public static void setupGlobal(ITestContext context) {
         LOG.info("================ BEFORE ALL ================\n" +
                 "======= HOPEFULLY WON'T NEED TO READ =======");
@@ -37,7 +36,7 @@ public class Hooks extends Util {
         AccessToken.saveTokensToContext(context); // access/refresh tokens saved to context
     }
 
-    @Before
+    //    @Before
     public static void setup(ITestContext context, Method method) {
         LOG.info(scenarioInformation(context, method));
 //        System.out.println("-------- Scenario Start --------\nScenario Name: " + scenarioInformation(method));
@@ -61,10 +60,8 @@ public class Hooks extends Util {
     // figure out how to handle scenario context might be able to use ITestContext
     // will probably swap TestContext and ITestContext making TestContext for scenario data
     @After
-    public static void teardown(ITestContext context) {
-        if (context != null) {
-            context = null;
-        }
+    public static void teardown(ITestContext context, Method method) {
+
         if (getDriver() != null) {
             quitDriver();
         }
@@ -76,5 +73,19 @@ public class Hooks extends Util {
         context.setAttribute(REQUIRES_TOKENS, requiresTokens);
         return "-------- Scenario Start --------\n" +
                 "Scenario Name: " + method.getName() + "\nRequires Tokens" + requiresTokens;
+    }
+
+
+    @Before
+    public static void suiteSetup(ITestContext context, Method method) {
+        LOG.info("================ BEFORE ALL ================");
+        ScenarioCtx scenarioCtx = new ScenarioCtx();
+        TestContext.setScenarioCtx(scenarioCtx);
+        try {
+            System.out.println("what im looking for " + context.getAttribute("one"));
+        } catch (Exception e) {
+            System.out.println("hello");
+        }
+        TestContext.getScenarioCtx().setProperty("method name", method.getName());
     }
 }

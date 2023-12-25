@@ -11,6 +11,7 @@ import jw.demo.models.auth.Authenticate;
 import jw.demo.models.auth.Token;
 import jw.demo.pages.POM;
 import jw.demo.util.ConfigProperties;
+import jw.demo.util.ScenarioCtx;
 import jw.demo.util.Util;
 import lombok.Getter;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ public final class AccessTokenV1 {
 
     private static final Logger LOG = Util.loggerForClass();
     @Getter
-    private static final ThreadLocal<utility.ScenarioCtx> scenarioCtx = new ThreadLocal<utility.ScenarioCtx>();
+    private static final ThreadLocal<ScenarioCtx> scenarioCtx = new ThreadLocal<>();
     private static HttpResponse<String> tokenResponse;
     private static String accessToken;
     private static String AUTH_URL;
