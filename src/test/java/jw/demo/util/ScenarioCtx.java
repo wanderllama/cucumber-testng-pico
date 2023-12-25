@@ -10,8 +10,7 @@ public class ScenarioCtx {
     private static String password;
 
     public ScenarioCtx() {
-//        username = SafeData.getUsername();
-//        password = SafeData.getPassword();
+
     }
 
 }

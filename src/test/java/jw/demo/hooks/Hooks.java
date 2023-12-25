@@ -15,42 +15,44 @@ import org.testng.ITestContext;
 import java.lang.reflect.Method;
 import java.time.Duration;
 
+import static jw.demo.enums.ContextConstants.*;
+
 // Extends BaseHooks, BaseHooks extends Util and Util extends Driver
 public class Hooks extends Util {
 
-    static TestContext context;
+    protected static ThreadLocal<TestContext> scenarioCtx;
     private static Logger LOG = loggerForClass();
 
-    private Hooks(TestContext context) {
-        Hooks.context = context;
+    private Hooks(TestContext scenarioCtx) {
+        Hooks.scenarioCtx = scenarioCtx;
     }
 
     @BeforeAll
-    public static void setupGlobal() {
+    public static void setupGlobal(ITestContext context) {
         LOG.info("================ BEFORE ALL ================\n" +
                 "======= HOPEFULLY WON'T NEED TO READ =======");
 //        System.out.println("================ BEFORE ALL ================");
         ConfigProperties.setupProperties(); // property files for data and configuration
-        AccessToken.init();
-        context.setAccessToken(AccessToken.getTokenMap());
+        AccessToken.init(); // access/refresh token are saved to map
+        AccessToken.saveTokensToContext(context); // access/refresh tokens saved to context
     }
 
     @Before
-    public static void setup(ITestContext testContext, Method method) {
-        LOG.info(scenarioInformation(testContext, method));
+    public static void setup(ITestContext context, Method method) {
+        LOG.info(scenarioInformation(context, method));
 //        System.out.println("-------- Scenario Start --------\nScenario Name: " + scenarioInformation(method));
         setDriver();
         getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
         getDriver().manage().window().maximize();
         navigateTo(DocuportUrl.LOGIN);
-        if ((Boolean) testContext.getAttribute("requiresTokens")) {
+        if ((Boolean) context.getAttribute(REQUIRES_TOKENS)) {
             LOG.info("attempting to save tokens to WebDriver local storage for non login page scenario");
             JavascriptExecutor js = (JavascriptExecutor) getDriver();
-            context.getAccessToken().forEach((key, value) -> {
-                js.executeScript(String.format(
-                        "window.localStorage.setItem('%s','%s');", key, value));
-                LOG.info(String.format("%s saved to WebDriver local storage", key));
-            });
+            js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
+                    ACCESS_TOKEN, context.getAttribute(ACCESS_TOKEN)));
+            js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
+                    REQUIRES_TOKENS, context.getAttribute(REFRESH_TOKEN)));
+            LOG.info(String.format("%s and %s saved to WebDriver local storage", ACCESS_TOKEN, REFRESH_TOKEN));
             getDriver().navigate().refresh();
         }
         System.out.println(method.getAnnotation(Given.class).value().contains("Login Page"));
@@ -71,10 +73,8 @@ public class Hooks extends Util {
 
     private static String scenarioInformation(ITestContext context, Method method) {
         Boolean requiresTokens = !method.getAnnotation(Given.class).value().toLowerCase().contains("navigate to login page");
-        context.setAttribute("requiresTokens", requiresTokens);
-        StringBuilder info = new StringBuilder("-------- Scenario Start --------\n" +
-                "Scenario Name: ");
-        info.append(method.getName()).append("\nRequires Tokens").append(requiresTokens);
-        return info.toString();
+        context.setAttribute(REQUIRES_TOKENS, requiresTokens);
+        return "-------- Scenario Start --------\n" +
+                "Scenario Name: " + method.getName() + "\nRequires Tokens" + requiresTokens;
     }
 }

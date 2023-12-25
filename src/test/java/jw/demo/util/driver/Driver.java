@@ -1,6 +1,5 @@
 package jw.demo.util.driver;
 
-
 import jw.demo.enums.Browser;
 import jw.demo.enums.DocuportUrl;
 import jw.demo.util.ConfigProperties;

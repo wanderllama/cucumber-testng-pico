@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jw.demo.models.auth.Authenticate;
 import jw.demo.util.ConfigProperties;
 import jw.demo.util.Util;
-import lombok.Getter;
 import org.apache.logging.log4j.Logger;
+import org.testng.ITestContext;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,12 +16,14 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import static jw.demo.enums.ContextConstants.ACCESS_TOKEN;
+import static jw.demo.enums.ContextConstants.REFRESH_TOKEN;
+
 public final class AccessToken {
 
     private static final Logger LOG = Util.loggerForClass();
-    private static HttpResponse<String> tokenResponse;
-    @Getter
     private static Map<String, String> tokenMap;
+    private static HttpResponse<String> tokenResponse;
     private static String AUTH_URL;
 
     // prevent objects being made of this class
@@ -40,6 +42,7 @@ public final class AccessToken {
             throw new RuntimeException("empty response for tokens");
         }
         tokenMap = setTokens();
+
     }
 
     // send POST request for tokens returns response
@@ -71,8 +74,8 @@ public final class AccessToken {
             throw new RuntimeException("Error processing json token response to authenticate object");
         }
         HashMap<String, String> tokens = new HashMap<>();
-        tokens.put("dp_access_token", response.getUser().getJwtToken().getAccessToken());
-        tokens.put("dp_refresh_token", response.getUser().getJwtToken().getRefreshToken());
+        tokens.put(ACCESS_TOKEN, response.getUser().getJwtToken().getAccessToken());
+        tokens.put(REFRESH_TOKEN, response.getUser().getJwtToken().getRefreshToken());
         return tokens;
     }
 
@@ -82,5 +85,10 @@ public final class AccessToken {
                 "\",\"password\":\"" +
                 ConfigProperties.getData("password") +
                 "\"}";
+    }
+
+    public static void saveTokensToContext(ITestContext context) {
+        context.setAttribute(ACCESS_TOKEN, tokenMap.get(ACCESS_TOKEN));
+        context.setAttribute(REFRESH_TOKEN, tokenMap.get(REFRESH_TOKEN));
     }
 }
