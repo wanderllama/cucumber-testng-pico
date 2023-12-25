@@ -35,5 +35,6 @@ public class StepDefTwo {
 
         System.out.println(containerObj.getDataObject().getResultCountStepTwo() + " was the number of results in step 2");
         System.out.println(containerObj.getDataObject().getResultCountStepThree() + " was the number of results in step 3");
+        Driver.getDriver().quit();
     }
 }
