@@ -13,7 +13,6 @@ public class StepDefTwo {
         this.containerObj = containerObj;
     }
 
-
     @And("I want to use data from step one in stepDefTwo and update search with {string}")
     public void iWantToUseDataFromStepOneInStepDefTwoToSearch(String data) {
         Long resultCount = Long.parseLong(Driver.getDriver().findElement(

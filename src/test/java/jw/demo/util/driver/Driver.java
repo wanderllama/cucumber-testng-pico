@@ -27,7 +27,7 @@ public class Driver extends BaseDriver {
         return threadLocalDriver.get();
     }
 
-    public static void closeDriver() {
+    public static void quitDriver() {
         if (threadLocalDriver.get() != null) {
             threadLocalDriver.get().quit();
             threadLocalDriver.remove();

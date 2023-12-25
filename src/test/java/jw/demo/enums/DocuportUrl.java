@@ -1,8 +1,8 @@
 package jw.demo.enums;
 
+import jw.demo.util.Util;
 import jw.demo.util.driver.Driver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -17,7 +17,7 @@ public enum DocuportUrl {
     TAX_FORM_1099("1099-form"),
     MY_UPLOADS("my-uploads");
 
-    private static final Logger LOG = LoggerFactory.getLogger(DocuportUrl.class);
+    private static final Logger LOG = Util.loggerForClass();
     private final String endpoint;
 
     DocuportUrl(String endpoint) {
@@ -29,27 +29,26 @@ public enum DocuportUrl {
         // will need to handle login and clicking continue button
     }
 
-
-    public static URL getApiUrlForEndPoint(String endpoint) {
+    public static URL getApiUrl(String endpoint) {
         return createApiUrl(endpoint);
+    }
+
+    private static URL createApiUrl(String endpoint) {
+        try {
+
+            return new URL(getBasePathURI() + endpoint);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static URI getBasePathURI() {
         return URI.create(BASE.url() + API.url());
     }
 
-
-    public static String url(String applicationUrl) {
-        return BASE.url();
-    }
-
-
-    public static URL createApiUrl(String endpoint) {
-        try {
-            return new URL(endpoint);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    public String url() {
+        LOG.info(String.format("navigating to: %s%n", BASE + endpoint));
+        return endpoint;
     }
 
 
@@ -59,11 +58,6 @@ public enum DocuportUrl {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public String url() {
-        System.out.printf("navigating to: %s%n", BASE + endpoint);
-        return endpoint;
     }
 
 }

@@ -33,7 +33,6 @@ public class StepDefOne {
         Driver.getDriver().findElement(By.tagName("textarea")).sendKeys(data, Keys.ENTER);
     }
 
-
     @Then("I want to use data from step two in stepDefOne to search")
     public void iWantToUseDataFromStepTwoInStepDefOneToSearch() {
         String newSearch = containerObj.getDataObject().getDataFromStepTwo() +

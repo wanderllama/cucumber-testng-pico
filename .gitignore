@@ -11,3 +11,4 @@ jenkinsfile
 README.md
 /target/
 .DS_Store
+/src/test/resources/data/Token.json
