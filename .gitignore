@@ -10,3 +10,7 @@
 /jenkinsfile
 /README.md
 /src/test/java/loopcamp/
+/target/cucumber-report/runwebat/cucumber.html
+/target/cucumber-report/runwebat/cucumber.json
+/target/cucumber-report/runwebat/rerun.txt
+/target/test-classes/jw/demo/util/screenshot_helper/ScreenshotHelper$1.class
