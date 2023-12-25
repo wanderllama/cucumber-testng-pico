@@ -56,6 +56,8 @@ public class Hooks extends Util {
         System.out.println(method.getAnnotation(Given.class).value().contains("Login Page"));
     }
 
+    // figure out how to handle scenario context might be able to use ITestContext
+    // will probably swap TestContext and ITestContext making TestContext for scenario data
     @After
     public static void teardown(ITestContext context) {
         if (context != null) {
