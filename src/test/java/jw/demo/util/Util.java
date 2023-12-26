@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.Arrays;
 
 import static jw.demo.constantsAndEnums.Constants.PASSWORD;
 import static jw.demo.constantsAndEnums.Constants.USERNAME;
@@ -57,8 +56,8 @@ public class Util {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].click();", driver.findElement(element));
         } catch (JavascriptException e) {
-            Log.exceptionErrorMsg(String.format("JavascriptExecutor error while clicking locator %s%n", element.toString()), e, element);
-            throw new JavascriptException(Arrays.toString(e.getStackTrace()));
+            throw new JavascriptException(Log.exceptionErrorMsg(
+                    String.format("JavascriptExecutor error while clicking locator %s%n", element.toString()), e, element));
         }
     }
 

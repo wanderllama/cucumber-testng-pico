@@ -6,6 +6,8 @@
 package jw.demo.util;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,22 +15,27 @@ import java.util.Properties;
 
 public class ConfigProperties {
 
+    private static Logger LOG;
+
+    static {
+        LOG = Util.assignLoggerByClass();
+    }
     @Getter
     private static Properties properties;
-    private static FileInputStream file;
 
+    @SneakyThrows
     public static Properties setupProperties() {
         try {
             properties = new Properties();
 //            file = new FileInputStream("src/main/resources/config/config.properties");
             // local file with credentials below 
-            file = new FileInputStream("src/test/resources/configuration.properties");
+            FileInputStream file = new FileInputStream("src/test/resources/configuration.properties");
             properties.load(file);
             file.close();
         } catch (IOException e) {
-            System.out.println("Error Occurred While Reading Configuration File");
-            e.printStackTrace();
+            throw new IOException(Log.exceptionErrorMsg("Occurred While Reading Configuration File", e));
         }
+        LOG.info("Configuration.properties file loaded to properties obj");
         return properties;
     }
 

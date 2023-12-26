@@ -21,7 +21,7 @@ public class DocuportUrl {
 
     public static void startAtHomePage() {
         Driver.navigateTo(DocuportUrl.BASE);
-        // will need to handle login and clicking continue button
+        // will need to handle clicking continue button for scenarios that use tokens
     }
 
     public static String getUrlFor(String page) {

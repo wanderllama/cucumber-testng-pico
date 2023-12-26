@@ -13,7 +13,7 @@ import org.testng.annotations.DataProvider;
         }
         , monochrome = true
         , features = "src/test/resources/features"
-        , glue = "jw/demo/stepDefinitions"
+        , glue = "{jw/demo/stepDefinitions, jw/demo/hooks/Hooks.java}"
         , tags = "@context"
 )
 public class RunCucumberIT extends AbstractTestNGCucumberTests {

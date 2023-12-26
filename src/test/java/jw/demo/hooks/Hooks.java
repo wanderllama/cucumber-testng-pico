@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
-import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 
@@ -31,19 +30,20 @@ public class Hooks {
     }
 
     // runs once at the start of the test suite
-    @BeforeSuite
-    public void beforeSuite() {
-        LOG.info("================ BEFORE ALL ================\n" +
-                "======= HOPEFULLY WON'T NEED TO READ =======");
-        TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
-        AccessToken.init(); // access/refresh token are saved to map
-//        AccessToken.saveTokensToContext(context, tokenArray); // access/refresh tokens saved to context
+    @Before(order = 1)
+    public void before() {
+        if (TestContext.getGlobal() == null) {
+            LOG.info("================ BEFORE SUITE ================\n" +
+                    "========= HOPEFULLY WONT NEED TO READ =========");
+            TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
+//            AccessToken.init(); // access/refresh token are saved to map in TestContext
+            TestContext.setGlobal(COMPLETE);
+        }
     }
 
-    @Before
+    @Before(order = 2)
     public void before(Scenario method) {
         LOG.info("its obvious but what else can I do... I want it to work");
-        TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
         // set up the WebDriver and navigate to Login Page
         WebDriver driver = Driver.setupBeforeScenario();
 //        driver.(LOGIN);
@@ -69,9 +69,7 @@ public class Hooks {
     // will probably swap TestContext and ITestContext making TestContext for scenario data
     @After
     public void after() {
-        if (Driver.getDriver() != null) {
-            Driver.quitDriver();
-        }
+        Driver.quitDriver();
     }
 
     // log scenario information and identify if tokens are used for logging in

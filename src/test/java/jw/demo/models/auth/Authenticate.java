@@ -15,8 +15,7 @@ public class Authenticate {
             try {
                 throw new NullPointerException();
             } catch (NullPointerException e) {
-                Log.exceptionErrorMsg("User obj has not been created", e);
-                throw new NullPointerException();
+                throw new NullPointerException(Log.exceptionErrorMsg("User obj has not been created", e));
             }
         }
         return user;

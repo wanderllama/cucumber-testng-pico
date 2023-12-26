@@ -30,6 +30,7 @@ public class TestContext {
     public static void setScenarioCtx(ScenarioCtx s) {
         scenarioCtxThreadLocal.set(s);
         LOG.info("ScenarioCtx set");
+        global = null;
     }
 
     public static Map<String, String> getTokensMap() {
