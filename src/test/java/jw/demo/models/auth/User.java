@@ -20,4 +20,8 @@ public class User {
     List<String> permissions;
     JwtToken jwtToken;
 
+    public User(JwtToken jwtToken) {
+        this.jwtToken = jwtToken;
+    }
+
 }

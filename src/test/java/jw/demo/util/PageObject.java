@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static jw.demo.enums.WaitTime.SHORT;
+import static jw.demo.constantsAndEnums.WaitTime.SHORT;
 
 public abstract class PageObject extends Driver {
     private static final long DRIVER_WAIT_TIME = 10;

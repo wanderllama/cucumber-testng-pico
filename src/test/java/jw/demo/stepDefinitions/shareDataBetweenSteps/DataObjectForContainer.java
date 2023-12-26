@@ -9,6 +9,4 @@ public class DataObjectForContainer {
     private String dataFromStepOne;
     private String dataFromStepTwo;
     private String combinedData;
-
-    private DataObjectForContainer dataObj;
 }

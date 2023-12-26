@@ -1,16 +1,16 @@
 package jw.demo.util;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Properties;
 
-@Data
+
+@SuppressWarnings({"LombokGetterMayBeUsed", "LombokSetterMayBeUsed"})
 public class TestContext {
+
 
     private static ThreadLocal<ScenarioCtx> scenarioCtxThreadLocal = new ThreadLocal<>();
 
-    @Setter
-    @Getter
+    private static Properties properties;
+
     private static String global;
 
     static {
@@ -20,6 +20,22 @@ public class TestContext {
 
     public static ScenarioCtx getScenarioCtx() {
         return scenarioCtxThreadLocal.get();
+    }
+
+    public static Properties getProperties() {
+        return properties;
+    }
+
+    public static void setProperties(Properties prop) {
+        properties = prop;
+    }
+
+    public static String getGlobal() {
+        return global;
+    }
+
+    public static void setGlobal(String prop) {
+        global = prop;
     }
 
     public static void setScenarioCtx(ScenarioCtx s) {

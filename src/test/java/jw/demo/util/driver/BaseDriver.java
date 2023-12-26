@@ -1,31 +1,34 @@
 package jw.demo.util.driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import jw.demo.enums.Browser;
-import jw.demo.util.ConfigProperties;
+import jw.demo.constantsAndEnums.BrowserType;
+import jw.demo.util.TestContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import static jw.demo.constantsAndEnums.BrowserType.*;
+import static jw.demo.constantsAndEnums.Constants.BROWSER;
+
 public class BaseDriver {
 
     private WebDriver driver;
 
-    private Browser browser;
+    private BrowserType browserIs;
 
     void setBrowser() {
-        String b = ConfigProperties.getProperties().getProperty("browser").trim().toLowerCase();
+        String b = TestContext.getProperties().getProperty(BROWSER).trim().toLowerCase();
         switch (b) {
             case "chrome-linux":
             case "chrome":
-                browser = Browser.CHROME;
+                browserIs = CHROME;
                 break;
             case "firefox":
-                browser = Browser.FIREFOX;
+                browserIs = FIREFOX;
                 break;
             case "edge":
-                browser = Browser.EDGE;
+                browserIs = EDGE;
                 break;
             default:
                 System.out.printf("%s is not a valid browser property used in configuration properties file", b);
@@ -34,8 +37,8 @@ public class BaseDriver {
 
     void createDriver() {
         if (driver == null) {
-            System.out.printf("Browser: %s%n", browser);
-            switch (browser) {
+            System.out.printf("Browser: %s%n", browserIs);
+            switch (browserIs) {
                 case CHROME:
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();

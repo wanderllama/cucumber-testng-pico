@@ -3,7 +3,6 @@ package jw.demo.stepDefinitions.shareDataBetweenSteps;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import jw.demo.util.ConfigProperties;
 import jw.demo.util.driver.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -19,7 +18,6 @@ public class StepDefOne {
 
     @Given("I navigate to  {string}")
     public void iNavigateTo(String url) {
-        ConfigProperties.setupProperties();
         containerObj.setGoogleUrl(url);
         Driver.setDriver();
         Driver.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(15));

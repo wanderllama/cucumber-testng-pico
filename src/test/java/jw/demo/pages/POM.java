@@ -20,9 +20,17 @@ public class POM {
         LOG = Util.assignLoggerByClass();
     }
 
+    private BasePage basePage;
     private LoginPage loginPage;
     private Form1099Page form1099Page;
     private MyUploadsPage myUploadsPage;
+
+    public BasePage getBasePage() {
+        if (basePage == null) {
+            basePage = new BasePage();
+        }
+        return basePage;
+    }
 
     public LoginPage getLoginPage() {
         if (loginPage == null) {

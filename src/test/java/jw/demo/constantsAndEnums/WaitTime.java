@@ -1,4 +1,4 @@
-package jw.demo.enums;
+package jw.demo.constantsAndEnums;
 
 import java.time.Duration;
 
@@ -16,6 +16,7 @@ public enum WaitTime {
     WaitTime(int milliseconds) {
         millis = milliseconds;
     }
+
 
     public Duration waitTime() {
         return Duration.ofMillis(millis);

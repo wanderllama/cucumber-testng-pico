@@ -1,6 +1,6 @@
 package jw.demo.pages;
 
-import jw.demo.enums.WaitTime;
+import jw.demo.constantsAndEnums.WaitTime;
 import jw.demo.util.Util;
 import jw.demo.util.driver.Driver;
 import lombok.Getter;

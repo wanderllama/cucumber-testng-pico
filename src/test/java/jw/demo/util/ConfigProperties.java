@@ -17,7 +17,7 @@ public class ConfigProperties {
     private static Properties properties;
     private static FileInputStream file;
 
-    public static void setupProperties() {
+    public static Properties setupProperties() {
         try {
             properties = new Properties();
 //            file = new FileInputStream("src/main/resources/config/config.properties");
@@ -29,6 +29,7 @@ public class ConfigProperties {
             System.out.println("Error Occurred While Reading Configuration File");
             e.printStackTrace();
         }
+        return properties;
     }
 
     public static String getData(String key) {

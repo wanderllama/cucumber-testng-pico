@@ -1,6 +1,6 @@
 package jw.demo.util.driver;
 
-import jw.demo.enums.DocuportUrl;
+import jw.demo.constantsAndEnums.DocuportUrl;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import static jw.demo.enums.WaitTime.LONG;
+import static jw.demo.constantsAndEnums.WaitTime.LONG;
 import static jw.demo.util.Util.assignLoggerByClass;
 
 public class Driver {
@@ -21,11 +21,12 @@ public class Driver {
         threadLocalDriver = new ThreadLocal<>();
     }
 
-    public static void setupBeforeScenario() {
+    public static WebDriver setupBeforeScenario() {
         // set up the WebDriver
         setDriver();
         getDriver().manage().timeouts().implicitlyWait(LONG.waitTime());
         getDriver().manage().window().maximize();
+        return threadLocalDriver.get();
     }
 
     public static void setDriver() {
@@ -52,8 +53,8 @@ public class Driver {
         }
     }
 
-    public static void navigateTo(DocuportUrl goToThis) {
-        getDriver().get(goToThis.url());
+    public static void navigateTo(String page) {
+        getDriver().get(DocuportUrl.getUrlFor(page));
     }
 
     public static WebElement findElement(By element) {

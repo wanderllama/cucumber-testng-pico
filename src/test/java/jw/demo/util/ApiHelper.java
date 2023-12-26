@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import jw.demo.enums.DocuportUrl;
+import jw.demo.constantsAndEnums.DocuportUrl;
 
 /**
  * Every Api Step definition class should extend this class

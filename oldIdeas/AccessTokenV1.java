@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import jw.demo.enums.DocuportUrl;
+import jw.demo.constantsAndEnums.DocuportUrl;
 import jw.demo.models.auth.Authenticate;
 import jw.demo.models.auth.Token;
 import jw.demo.pages.POM;
