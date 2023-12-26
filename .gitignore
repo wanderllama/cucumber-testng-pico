@@ -12,5 +12,5 @@ README.md
 /target/
 .DS_Store
 /src/test/resources/data/Token.json
-
 /src/test/resources/config.properties
+/target
