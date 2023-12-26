@@ -18,7 +18,6 @@ import static jw.demo.enums.ContextConstants.*;
 import static jw.demo.enums.DocuportUrl.LOGIN;
 import static jw.demo.util.Util.*;
 
-// Extends BaseHooks, BaseHooks extends Util and Util extends Driver
 public class Hooks {
 
     private static final Logger LOG;
@@ -27,8 +26,9 @@ public class Hooks {
         LOG = assignLoggerByClass();
     }
 
+    // runs once at the start of the test suite
     @BeforeAll
-    public static void suiteSetup(ITestContext context, Method method) {
+    public static void suiteSetup(ITestContext context) {
         LOG.info("================ BEFORE ALL ================\n" +
                 "======= HOPEFULLY WON'T NEED TO READ =======");
         ConfigProperties.setupProperties(); // property files for data and configuration
@@ -54,12 +54,7 @@ public class Hooks {
         // adds tokens to the WebDriver if scenario is not testing the login page
         if ((Boolean) context.getAttribute(REQUIRES_TOKENS)) {
             LOG.info("attempting to save tokens to WebDriver local storage for non login page scenario");
-            JavascriptExecutor js = (JavascriptExecutor) getDriver();
-            js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
-                    ACCESS_TOKEN, context.getAttribute(ACCESS_TOKEN)));
-            js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
-                    REQUIRES_TOKENS, context.getAttribute(REFRESH_TOKEN)));
-            LOG.info(String.format("%s and %s saved to WebDriver local storage", ACCESS_TOKEN, REFRESH_TOKEN));
+            setAllLocalStorageTokens(context, ACCESS_TOKEN, REFRESH_TOKEN);
             getDriver().navigate().refresh();
         }
     }
@@ -67,16 +62,33 @@ public class Hooks {
     // figure out how to handle scenario context might be able to use ITestContext
     // will probably swap TestContext and ITestContext making TestContext for scenario data
     @After
-    public static void teardown(ITestContext context, Method method) {
+    public static void teardown() {
         if (getDriver() != null) {
             quitDriver();
         }
     }
 
+    // log scenario information and identify if tokens are used for logging in
     private static String aboutScenario(ITestContext context, Method method) {
-        Boolean requiresTokens = !method.getAnnotation(Given.class).value().toLowerCase().contains("navigate to login page");
+        Boolean requiresTokens = !method.getAnnotation(Given.class).value()
+                .toLowerCase().contains(STRING_FOUND_IN_LOGIN_SCENARIOS);
         context.setAttribute(REQUIRES_TOKENS, requiresTokens);
         return "-------- Scenario Start --------\n" +
                 "Scenario Name: " + method.getName() + "\nRequires Tokens" + requiresTokens;
+    }
+
+    // add tokens in accessTokens array using setLocalStorageToken
+    private static void setAllLocalStorageTokens(ITestContext context, String... accessTokens) {
+        for (String accessToken : accessTokens) {
+            setLocalStorageToken(context, accessToken);
+        }
+    }
+
+    // add single token to local storage
+    private static void setLocalStorageToken(ITestContext context, String tokenName) {
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
+                tokenName, context.getAttribute(tokenName)));
+        LOG.info(String.format("%s saved to WebDriver local storage", tokenName));
     }
 }
