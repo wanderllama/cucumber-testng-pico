@@ -11,7 +11,6 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.ITestContext;
 
 import java.time.Duration;
 import java.util.NoSuchElementException;
@@ -22,12 +21,18 @@ import static jw.demo.enums.WaitTime.REGULAR;
 
 public class Util extends Driver {
 
+    private static final Logger LOG;
+
+    POM pom = new POM();
+
+    static {
+        LOG = assignLoggerByClass();
+    }
+
     // create WebDriverWait object -> Not sure if I will keep these wait helpers
     public static WebDriverWait getWait() {
         return getWait(REGULAR.waitTime());
-    }    private static final Logger LOG = loggerForClass();
-
-    POM pom = new POM();
+    }
 
     public static void waitTillInvisible(WebElement element, Duration d) {
         try {
@@ -81,7 +86,7 @@ public class Util extends Driver {
         }
     }
 
-    public static Logger loggerForClass() {
+    public static Logger assignLoggerByClass() {
         String callerName = Thread.currentThread().getStackTrace()[2].getClassName();
         Class<?> caller = null;
         try {
@@ -93,146 +98,13 @@ public class Util extends Driver {
         return caller != null ? LogManager.getLogger(caller.getSimpleName()) : null;
     }
 
-    public static void login(POM pom, ITestContext context) {
-        getDriver().findElement(pom.getLoginPage().getEmailTextField()).sendKeys(context.getAttribute(USERNAME).toString());
-        getDriver().findElement(pom.getLoginPage().getPasswordTextField()).sendKeys(context.getAttribute(PASSWORD).toString());
-        getDriver().findElement(pom.getLoginPage().getSubmitBtn()).click();
+
+    public static String getUsername(ScenarioCtx context) {
+        return context.getProperty(USERNAME).toString();
     }
 
-    public static String getUsername() {
-        return ConfigProperties.getData(USERNAME);
+    public static String getPassword(ScenarioCtx context) {
+        return context.getProperty(PASSWORD).toString();
     }
-
-    public static String getPassword() {
-        return ConfigProperties.getData(PASSWORD);
-    }
-
-
-
-
-//
-//
-//    // create Actions object
-//    public Actions createActions() {
-//        return new Actions(getDriver());
-//    }
-//
-//    // create select object
-//    public Select createSelect(String xpath) {
-//        return new Select(getDriver().findElement(By.xpath(xpath)));
-//    }
-//
-//    // Assert methods
-//    // title verification
-//    public void titleVerification(String expectedTitle) {
-//        Assert.assertEquals(getDriver().getTitle(), expectedTitle);
-//    }
-//
-//    // title verification contains
-//    public void titleVerificationContains(String expectedTitle) {
-//        Assert.assertTrue(getDriver().getTitle().contains(expectedTitle));
-//    }
-//
-//    // url verification
-//    public void urlVerification(String url) {
-//        Assert.assertEquals(getDriver().getCurrentUrl(), url);
-//    }
-//
-//    // url verification contains
-//    public void urlVerificationContains(String url) {
-//        Assert.assertTrue(getDriver().getCurrentUrl().contains(url));
-//    }
-//
-//    // text verification
-//    public void textVerification(String xpath, String text) {
-//        Assert.assertEquals(Driver.getDriver().findElement(By.xpath(xpath)).getText(), text);
-//    }
-//
-//    // text verification contains
-//    public void textVerificationContains(String xpath, String text) {
-//        Assert.assertTrue(getDriver().findElement(By.xpath(xpath)).getText().contains(text));
-//    }
-//
-//    // is displayed verification
-//    public void isDisplayed(String xpath) {
-//        Assert.assertTrue(getDriver().findElement(By.xpath(xpath)).isDisplayed());
-//    }
-//
-//    // is selected verification
-//    public void isSelected(String xpath) {
-//        Assert.assertTrue(getDriver().findElement(By.xpath(xpath)).isSelected());
-//    }
-//
-//    // is enabled verification
-//    public void isEnabled(String xpath) {
-//        Assert.assertTrue(getDriver().findElement(By.xpath(xpath)).isEnabled());
-//    }
-//
-//    // WebDriverWait methods
-//    // clickable
-//    public void isClickable(String xpath) {
-//        if (wait == null) {
-//            new Util();
-//        }
-//        wait.until(ExpectedConditions.elementToBeClickable(getDriver().findElement(By.xpath(xpath))));
-//    }
-//
-    // visible
-//    public void waitVisible(String xpath) {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.visibilityOf(getDriver().findElement(By.xpath(xpath))));
-//    }
-//
-//    // select
-//    public void waitSelect(String xpath) {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.elementToBeSelected(getDriver().findElement(By.xpath(xpath))));
-//    }
-//
-//    // alert
-//    public void waitAlert() {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.alertIsPresent());
-//    }
-//
-//    // url
-//    public void waitUrl(String url) {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.urlMatches(url));
-//    }
-//
-//    // title is
-//    public void waitTitleIs(String title) {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.titleIs(title));
-//    }
-//
-//    // title contains
-//    public void waitTitleContains(String title) {
-//        if (wait == null) {
-//            createWait();
-//        }
-//        wait.until(ExpectedConditions.titleContains(title));
-//    }
-//
-//
-//    // list of texts from list of WebElements
-//    public List<String> getTexts(List<WebElement> elements) {
-//        List<String> texts = new ArrayList<>();
-//        for (WebElement element : elements) {
-//            texts.add(element.getText());
-//        }
-//        return texts;
-//    }
 
 }

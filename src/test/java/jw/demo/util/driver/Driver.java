@@ -6,12 +6,20 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import static jw.demo.enums.WaitTime.LONG;
 import static jw.demo.util.Util.loggerForClass;
 
 public class Driver {
 
     private static final Logger LOG = loggerForClass();
     protected static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
+
+    public static void setupBeforeScenario() {
+        // set up the WebDriver
+        setDriver();
+        getDriver().manage().timeouts().implicitlyWait(LONG.waitTime());
+        getDriver().manage().window().maximize();
+    }
 
     public static void setDriver() {
         BaseDriver baseDriver = new BaseDriver();
