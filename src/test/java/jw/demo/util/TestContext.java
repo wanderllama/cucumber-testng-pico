@@ -2,6 +2,7 @@ package jw.demo.util;
 
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -16,6 +17,7 @@ public class TestContext {
         LOG = Util.assignLoggerByClass();
     }
 
+    private static Map<String, String> tokenMap;
 
     private static Properties properties;
 
@@ -28,6 +30,14 @@ public class TestContext {
     public static void setScenarioCtx(ScenarioCtx s) {
         scenarioCtxThreadLocal.set(s);
         LOG.info("ScenarioCtx set");
+    }
+
+    public static Map<String, String> getTokensMap() {
+        return tokenMap;
+    }
+
+    public static void setTokensMap(Map<String, String> map) {
+        tokenMap = map;
     }
 
     public static Properties getProperties() {

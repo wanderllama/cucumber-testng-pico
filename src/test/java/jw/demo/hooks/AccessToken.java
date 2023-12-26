@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jw.demo.models.auth.Authenticate;
 import jw.demo.util.ConfigProperties;
 import jw.demo.util.Log;
+import jw.demo.util.TestContext;
 import org.apache.logging.log4j.Logger;
-import org.testng.ITestContext;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -50,8 +50,7 @@ public final class AccessToken {
                 Log.exceptionErrorMsg(e);
             }
         }
-        tokenMap = setTokens();
-
+        TestContext.setTokensMap(setTokens());
     }
 
     // send POST request for tokens returns response
@@ -95,12 +94,5 @@ public final class AccessToken {
                 "\",\"password\":\"" +
                 ConfigProperties.getData("password") +
                 "\"}";
-    }
-
-    public static void saveTokensToContext(ITestContext context, String... tokensArray) {
-        for (String tokenName : tokensArray) {
-            context.setAttribute(tokenName, tokenMap.get(tokenName));
-            LOG.info("%s token was saved to context with %s as the attribute key", tokenName);
-        }
     }
 }

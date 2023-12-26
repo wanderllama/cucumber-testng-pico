@@ -36,7 +36,7 @@ public class Hooks {
         LOG.info("================ BEFORE ALL ================\n" +
                 "======= HOPEFULLY WON'T NEED TO READ =======");
         TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
-//        AccessToken.init(); // access/refresh token are saved to map
+        AccessToken.init(); // access/refresh token are saved to map
 //        AccessToken.saveTokensToContext(context, tokenArray); // access/refresh tokens saved to context
     }
 
