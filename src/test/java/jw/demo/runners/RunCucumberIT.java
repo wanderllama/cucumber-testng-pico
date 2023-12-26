@@ -16,7 +16,7 @@ import org.testng.annotations.DataProvider;
         , glue = "jw/demo/stepDefinitions"
         , tags = "@context"
 )
-public class RetryRunner extends AbstractTestNGCucumberTests {
+public class RunCucumberIT extends AbstractTestNGCucumberTests {
 
     @Override
     @DataProvider(parallel = true)

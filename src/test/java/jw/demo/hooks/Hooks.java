@@ -2,7 +2,7 @@ package jw.demo.hooks;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import jw.demo.util.ConfigProperties;
 import jw.demo.util.ScenarioCtx;
@@ -12,12 +12,14 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
+import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 
 import static jw.demo.constantsAndEnums.Constants.*;
 import static jw.demo.util.Util.assignLoggerByClass;
 
+@SuppressWarnings("DataFlowIssue")
 public class Hooks {
 
     private static final Logger LOG;
@@ -29,8 +31,8 @@ public class Hooks {
     }
 
     // runs once at the start of the test suite
-    @BeforeAll
-    public static void suiteSetup(ITestContext context) {
+    @BeforeSuite
+    public void beforeSuite() {
         LOG.info("================ BEFORE ALL ================\n" +
                 "======= HOPEFULLY WON'T NEED TO READ =======");
         TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
@@ -39,14 +41,16 @@ public class Hooks {
     }
 
     @Before
-    public static void setup(ITestContext context, Method method) {
+    public void before(Scenario method) {
+        LOG.info("its obvious but what else can I do... I want it to work");
+        TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
         // set up the WebDriver and navigate to Login Page
         WebDriver driver = Driver.setupBeforeScenario();
 //        driver.(LOGIN);
 
         // gather/LOG scenario information, identify if scenario test Login page
         // if scenario doesn't test login page then marks scenario to use tokens
-        LOG.info(aboutScenario(context, method));
+//        LOG.info(aboutScenario(context, method));
 
         // create scenarioCtx object and make it thread safe and accessible through the TestContext class
         ScenarioCtx scenarioCtx = new ScenarioCtx();
@@ -54,17 +58,17 @@ public class Hooks {
         TestContext.setScenarioCtx(scenarioCtx);
 
         // adds tokens to the WebDriver if scenario is not testing the login page
-        if ((Boolean) context.getAttribute(REQUIRES_TOKENS)) {
-            LOG.info("attempting to save tokens to WebDriver local storage for non login page scenario");
-            setAllLocalStorageTokens(context, driver, tokenArray);
-            driver.navigate().refresh();
-        }
+//        if ((Boolean) context.getAttribute(REQUIRES_TOKENS)) {
+//            LOG.info("attempting to save tokens to WebDriver local storage for non login page scenario");
+//            setAllLocalStorageTokens(context, driver, tokenArray);
+//            driver.navigate().refresh();
+//        }
     }
 
     // figure out how to handle scenario context might be able to use ITestContext
     // will probably swap TestContext and ITestContext making TestContext for scenario data
     @After
-    public static void teardown() {
+    public void after() {
         if (Driver.getDriver() != null) {
             Driver.quitDriver();
         }

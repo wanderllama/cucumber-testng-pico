@@ -3,27 +3,29 @@ package jw.demo.util;
 
 import jw.demo.util.driver.Driver;
 import lombok.Getter;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static jw.demo.constantsAndEnums.WaitTime.SHORT;
 
 public abstract class PageObject extends Driver {
-    private static final long DRIVER_WAIT_TIME = 10;
-    private static final Logger LOG = LoggerFactory.getLogger(PageObject.class);
+
+    private static final Logger LOG;
+
+    static {
+        LOG = Util.assignLoggerByClass();
+    }
 
     @Getter
     protected WebDriverWait wait;
     @Getter
     protected WebDriver webDriver;
-
 
     protected PageObject() {
         this.webDriver = Driver.getDriver();
