@@ -35,7 +35,11 @@ import static jw.demo.util.driver.Driver.navigateTo;
 
 public final class AccessTokenV1 {
 
-    private static final Logger LOG = Util.loggerForClass();
+    private static final Logger LOG;
+
+    static {
+        LOG = Util.assignLoggerByClass();
+    }
     @Getter
     private static final ThreadLocal<ScenarioCtx> scenarioCtx = new ThreadLocal<>();
     private static HttpResponse<String> tokenResponse;

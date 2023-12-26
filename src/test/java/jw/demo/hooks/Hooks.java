@@ -16,8 +16,7 @@ import java.lang.reflect.Method;
 
 import static jw.demo.enums.ContextConstants.*;
 import static jw.demo.enums.DocuportUrl.LOGIN;
-import static jw.demo.util.Util.loggerForClass;
-import static jw.demo.util.driver.Driver.*;
+import static jw.demo.util.Util.*;
 
 // Extends BaseHooks, BaseHooks extends Util and Util extends Driver
 public class Hooks {
@@ -25,7 +24,7 @@ public class Hooks {
     private static final Logger LOG;
 
     static {
-        LOG = loggerForClass();
+        LOG = assignLoggerByClass();
     }
 
     @BeforeAll

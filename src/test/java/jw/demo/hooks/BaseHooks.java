@@ -22,7 +22,11 @@ import java.util.Arrays;
 // Extends Util and Util extends Driver
 public class BaseHooks extends Util {
 
-    static Logger LOG = loggerForClass();
+    static Logger LOG;
+
+    static {
+        LOG = assignLoggerByClass();
+    }
 
     private static String scenarioInformation(Method method) {
         StringBuilder info = new StringBuilder(method.getName() + "\nScenario Groups: ");

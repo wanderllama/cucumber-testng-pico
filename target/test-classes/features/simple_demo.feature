@@ -1,8 +1,8 @@
 Feature: test
 
   @context
-    Scenario: testOne
-      Given this is step "1" for test
+  Scenario: testOne
+    Given this is step "1" for test
 
   @context
   Scenario: testTwo

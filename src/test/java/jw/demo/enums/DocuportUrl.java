@@ -1,12 +1,14 @@
 package jw.demo.enums;
 
-import jw.demo.util.Util;
 import jw.demo.util.driver.Driver;
 import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+
+import static jw.demo.util.Util.assignLoggerByClass;
+import static jw.demo.util.Util.exceptionErrorMsg;
 
 public enum DocuportUrl {
 
@@ -17,7 +19,12 @@ public enum DocuportUrl {
     TAX_FORM_1099("1099-form"),
     MY_UPLOADS("my-uploads");
 
-    private static final Logger LOG = Util.loggerForClass();
+    private static final Logger LOG;
+
+    static {
+        LOG = assignLoggerByClass();
+    }
+
     private final String endpoint;
 
     DocuportUrl(String endpoint) {
@@ -35,9 +42,9 @@ public enum DocuportUrl {
 
     private static URL createApiUrl(String endpoint) {
         try {
-
             return new URL(getBasePathURI() + endpoint);
         } catch (MalformedURLException e) {
+            exceptionErrorMsg(e);
             throw new RuntimeException(e);
         }
     }

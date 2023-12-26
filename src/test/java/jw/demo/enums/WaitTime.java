@@ -21,7 +21,7 @@ public enum WaitTime {
         return Duration.ofMillis(millis);
     }
 
-    public int getSeconds() {
+    public int amountOfSeconds() {
         return millis == 0 ? 0 : (millis / 1000);
     }
 

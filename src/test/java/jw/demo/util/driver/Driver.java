@@ -2,17 +2,24 @@ package jw.demo.util.driver;
 
 import jw.demo.enums.DocuportUrl;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static jw.demo.enums.WaitTime.LONG;
-import static jw.demo.util.Util.loggerForClass;
+import static jw.demo.util.Util.assignLoggerByClass;
 
 public class Driver {
 
-    private static final Logger LOG = loggerForClass();
-    protected static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
+    protected static final ThreadLocal<WebDriver> threadLocalDriver;
+    private static final Logger LOG;
+
+    static {
+        LOG = assignLoggerByClass();
+        threadLocalDriver = new ThreadLocal<>();
+    }
 
     public static void setupBeforeScenario() {
         // set up the WebDriver
@@ -49,11 +56,14 @@ public class Driver {
         getDriver().get(goToThis.url());
     }
 
+    public static WebElement findElement(By element) {
+        return getDriver().findElement(element);
+    }
+
     static String getDriverBrowser() {
         LOG.info("Getting browser info");
         Capabilities cap = ((RemoteWebDriver) getDriver()).getCapabilities();
         return cap.getBrowserName();
     }
-
 
 }

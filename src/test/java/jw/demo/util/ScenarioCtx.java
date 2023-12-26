@@ -7,7 +7,12 @@ import java.util.Map;
 
 public class ScenarioCtx {
 
-    private static final Logger LOG = Util.loggerForClass();
+    private static final Logger LOG;
+
+    static {
+        LOG = Util.assignLoggerByClass();
+    }
+
     private ScenarioCtx scenarioCtx;
 
     private Map<String, Object> contextMap = new HashMap<>();

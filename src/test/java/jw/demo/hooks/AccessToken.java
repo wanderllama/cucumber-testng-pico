@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jw.demo.models.auth.Authenticate;
 import jw.demo.util.ConfigProperties;
-import jw.demo.util.Util;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
 
@@ -18,10 +17,17 @@ import java.util.Map;
 
 import static jw.demo.enums.ContextConstants.ACCESS_TOKEN;
 import static jw.demo.enums.ContextConstants.REFRESH_TOKEN;
+import static jw.demo.util.Util.assignLoggerByClass;
+import static jw.demo.util.Util.exceptionErrorMsg;
 
 public final class AccessToken {
 
-    private static final Logger LOG = Util.loggerForClass();
+    private static final Logger LOG;
+
+    static {
+        LOG = assignLoggerByClass();
+    }
+
     private static Map<String, String> tokenMap;
     private static HttpResponse<String> tokenResponse;
     private static String AUTH_URL;
@@ -39,7 +45,12 @@ public final class AccessToken {
         // sent POST request for tokens
         tokenResponse = getTokens();
         if (tokenResponse.body().equals("{}")) {
-            throw new RuntimeException("empty response for tokens");
+            // try to create polymorphic method to replace this mess
+            try {
+                throw new RuntimeException();
+            } catch (RuntimeException e) {
+                exceptionErrorMsg(e);
+            }
         }
         tokenMap = setTokens();
 
@@ -57,9 +68,9 @@ public final class AccessToken {
                     .build();
             tokenResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
-            System.out.println("error getting payload from file required for POST request for tokens");
+            exceptionErrorMsg("error getting payload from file required for POST request for tokens", e);
         } catch (InterruptedException e) {
-            System.out.println("error sending POST request for tokens");
+            exceptionErrorMsg("error sending POST request for tokens", e);
         }
         return tokenResponse;
     }
@@ -71,6 +82,7 @@ public final class AccessToken {
         try {
             response = mapper.readValue(tokenResponse.body(), Authenticate.class);
         } catch (JsonProcessingException e) {
+            exceptionErrorMsg(e);
             throw new RuntimeException("Error processing json token response to authenticate object");
         }
         HashMap<String, String> tokens = new HashMap<>();

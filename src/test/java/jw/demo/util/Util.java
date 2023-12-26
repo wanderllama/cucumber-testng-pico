@@ -1,18 +1,16 @@
 package jw.demo.util;
 
 
-import jw.demo.pages.POM;
+import jw.demo.enums.WaitTime;
 import jw.demo.util.driver.Driver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static jw.demo.enums.ContextConstants.PASSWORD;
@@ -23,66 +21,71 @@ public class Util extends Driver {
 
     private static final Logger LOG;
 
-    POM pom = new POM();
-
     static {
         LOG = assignLoggerByClass();
     }
 
     // create WebDriverWait object -> Not sure if I will keep these wait helpers
-    public static WebDriverWait getWait() {
-        return getWait(REGULAR.waitTime());
+    public static WebDriverWait waitFor() {
+        return waitFor(REGULAR.waitTime());
     }
 
-    public static void waitTillInvisible(WebElement element, Duration d) {
+    public static void waitTillInvisible(By element, WaitTime given) {
         try {
-            Util.getWait(d).until(ExpectedConditions.invisibilityOf(element));
+            waitFor(given.waitTime()).until(ExpectedConditions.invisibilityOf(getDriver().findElement(element)));
         } catch (TimeoutException e) {
-            LOG.error(String.format("%s failed waitTillInvisible wait after waiting %s%n", element.toString(), d));
+            exceptionErrorMsg(e, given, element);
         }
     }
 
-    public static WebDriverWait getWait(Duration d) {
-        return new WebDriverWait(Driver.getDriver(), d);
+    public static WebDriverWait waitFor(Duration d) {
+        return new WebDriverWait(getDriver(), d);
     }
 
-    public static void waitTillInvisible(WebElement element) {
+    public static void waitTillInvisible(By element) {
         try {
-            Util.getWait(REGULAR.waitTime()).until(ExpectedConditions.invisibilityOf(element));
+            waitFor(REGULAR.waitTime()).until(ExpectedConditions.invisibilityOf(
+                    getDriver().findElement(element)));
         } catch (TimeoutException e) {
-            LOG.error(String.format("%s failed waitTillInvisible wait after waiting %s%n", element.toString(), REGULAR.getSeconds()));
+            exceptionErrorMsg(e, REGULAR, element);
+            throw new TimeoutException(e.getMessage());
         }
     }
 
     public static WebElement waitTillVisible(By element) {
         WebElement webElement = null;
         try {
-            webElement = Util.getWait(REGULAR.waitTime()).until(ExpectedConditions.visibilityOf(Driver.getDriver().findElement(element)));
+            webElement = waitFor(REGULAR.waitTime()).until(ExpectedConditions.visibilityOf(getDriver().findElement(element)));
         } catch (TimeoutException e) {
-            LOG.error(String.format("%s failed waitTillVisible wait after waiting %s%n", element.toString(), REGULAR.getSeconds()));
+            exceptionErrorMsg(e, REGULAR, element);
+            throw new TimeoutException(e.getMessage());
         }
         return webElement;
     }
 
-    public static WebElement waitTillVisible(By element, Duration d) {
+    public static WebElement waitTillVisible(By element, WaitTime given) {
         WebElement webElement = null;
         try {
-            webElement = Driver.getDriver().findElement(element);
-            Util.getWait(d).until(ExpectedConditions.visibilityOf(webElement));
-        } catch (TimeoutException e) {
-            LOG.error(String.format("%s failed waitTillVisible wait after waiting %s%n", element.toString(), d.getSeconds()));
+            webElement = getDriver().findElement(element);
+            waitFor(given.waitTime()).until(ExpectedConditions.visibilityOf(webElement));
         } catch (NoSuchElementException e) {
-            LOG.error(String.format("%s could not be located NoSuchElementException", element.toString()));
+            exceptionErrorMsg(e, given, element);
+            throw new NoSuchElementException(Arrays.toString(e.getStackTrace()));
+        } catch (TimeoutException e) {
+            exceptionErrorMsg(e, given, element);
+            throw new TimeoutException(Arrays.toString(e.getStackTrace()));
         }
         return webElement;
     }
 
-    public static void jsClick(WebElement element) {
+    public static void jsClick(By element) {
         try {
-            JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
-            js.executeScript("arguments[0].click();", element);
-        } catch (Exception e) {
+            JavascriptExecutor js = (JavascriptExecutor) getDriver();
+            js.executeScript("arguments[0].click();", getDriver().findElement(element));
+        } catch (JavascriptException e) {
+            exceptionErrorMsg(e, element);
             LOG.error(String.format("JavascriptExecutor error while clicking locator %s%n", element.toString()));
+            throw new JavascriptException(Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -98,6 +101,30 @@ public class Util extends Driver {
         return caller != null ? LogManager.getLogger(caller.getSimpleName()) : null;
     }
 
+    public static void exceptionErrorMsg(Exception e) {
+        LOG.error(String.format("%s was thrown during %s method",
+                e.getClass().getSimpleName(), getMethodName()));
+    }
+
+    public static void exceptionErrorMsg(String customMessage, Exception e) {
+        LOG.error(customMessage + String.format("%s was thrown during %s method",
+                e.getClass().getSimpleName(), getMethodName()));
+    }
+
+    public static void exceptionErrorMsg(Exception e, By element) {
+        LOG.info(String.format("%s was thrown during %s method\nLocator Used: %s",
+                e.getClass().getSimpleName(), getMethodName(), element));
+    }
+
+    public static void exceptionErrorMsg(Exception e, WaitTime given, By element) {
+        LOG.info(String.format("%s was thrown after %s%n seconds during %s method\nLocator Used: %s",
+                e.getClass().getSimpleName(), given.amountOfSeconds(),
+                getMethodName(), element));
+    }
+
+    public static String getMethodName() {
+        return Thread.currentThread().getStackTrace()[2].getMethodName();
+    }
 
     public static String getUsername(ScenarioCtx context) {
         return context.getProperty(USERNAME).toString();

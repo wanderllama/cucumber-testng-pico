@@ -11,7 +11,11 @@ import java.lang.reflect.Field;
 
 public class DriverListener implements IInvokedMethodListener {
 
-    private static final Logger LOG = Util.loggerForClass();
+    private static final Logger LOG;
+
+    static {
+        LOG = Util.assignLoggerByClass();
+    }
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
