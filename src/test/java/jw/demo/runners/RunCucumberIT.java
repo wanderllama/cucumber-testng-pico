@@ -6,15 +6,14 @@ import org.testng.annotations.DataProvider;
 
 @CucumberOptions(plugin =
         {
-                  "jw/demo/hooks/ListenerPlugin"
-                , "html:target/cucumber-report/runwebat/cucumber.html"
+                  "html:target/cucumber-report/runwebat/cucumber.html"
                 , "json:target/cucumber-report/runwebat/cucumber.json"
                 , "rerun:target/cucumber-report/runwebat/rerun.txt"
                 , "pretty"
         }
         , monochrome = true
         , features = "src/test/resources/features"
-        , glue = "{jw/demo/stepDefinitions, jw/demo/hooks/Hooks.java}"
+        , glue = "jw/demo/stepDefinitions"
         , tags = "@context"
 )
 public class RunCucumberIT extends AbstractTestNGCucumberTests {

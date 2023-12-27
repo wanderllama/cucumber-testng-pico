@@ -1,4 +1,4 @@
-package jw.demo.hooks;
+package jw.demo.stepDefinitions.hooks;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;

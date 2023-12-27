@@ -1,4 +1,4 @@
-package jw.demo.stepDefinitions.dataprovider;
+package jw.demo.stepDefinitions.dataproviderFeatureSteps;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

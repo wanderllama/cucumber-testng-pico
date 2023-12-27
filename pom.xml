@@ -55,16 +55,16 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.22.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.22.0</version>
-        </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.22.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.22.1</version>
+            </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j18-impl -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -145,10 +145,12 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <properties>
+                                <parallel>methods</parallel>
+                                <threadCount>1</threadCount>
+                           <properties>
                                 <property>
                                     <name>dataproviderthreadcount</name>
-                                    <value>20</value>
+                                    <value>8</value>
                                 </property>
                             </properties>
                         </configuration>

@@ -1,4 +1,4 @@
-package jw.demo.hooks;
+package jw.demo.stepDefinitions.hooks;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -33,7 +33,8 @@ public class Hooks {
     @Before(order = 1)
     public void before() {
         if (TestContext.getGlobal() == null) {
-            LOG.error("\n" +
+            System.setProperty("log4j2.configurationFile", "/Users/james/IdeaProjects/cucumber-testng-pico/log4j2-test.xml");
+            LOG.info("\n" +
                     "================ BEFORE SUITE =================\n" +
                     "========= HOPEFULLY WONT NEED TO READ =========");
             TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration

@@ -1,4 +1,4 @@
-package jw.demo.stepDefinitions.dataprovider;
+package jw.demo.stepDefinitions.dataproviderFeatureSteps;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.DataTableType;

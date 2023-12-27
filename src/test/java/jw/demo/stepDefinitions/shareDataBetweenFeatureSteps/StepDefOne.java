@@ -1,4 +1,4 @@
-package jw.demo.stepDefinitions.shareDataBetweenSteps;
+package jw.demo.stepDefinitions.shareDataBetweenFeatureSteps;
 
 
 import io.cucumber.java.en.Given;
