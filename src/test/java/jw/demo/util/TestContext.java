@@ -29,7 +29,7 @@ public class TestContext {
 
     public static void setScenarioCtx(ScenarioCtx s) {
         scenarioCtxThreadLocal.set(s);
-        LOG.info("ScenarioCtx set");
+        LOG.error("ScenarioCtx set");
         global = null;
     }
 

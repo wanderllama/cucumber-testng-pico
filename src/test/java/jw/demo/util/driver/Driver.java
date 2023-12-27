@@ -62,7 +62,7 @@ public class Driver {
     }
 
     static String getDriverBrowser() {
-        LOG.info("Getting browser info");
+        LOG.error("Getting browser info");
         Capabilities cap = ((RemoteWebDriver) getDriver()).getCapabilities();
         return cap.getBrowserName();
     }

@@ -6,7 +6,8 @@ import org.testng.annotations.DataProvider;
 
 @CucumberOptions(plugin =
         {
-                "html:target/cucumber-report/runwebat/cucumber.html"
+                  "jw/demo/hooks/ListenerPlugin"
+                , "html:target/cucumber-report/runwebat/cucumber.html"
                 , "json:target/cucumber-report/runwebat/cucumber.json"
                 , "rerun:target/cucumber-report/runwebat/rerun.txt"
                 , "pretty"

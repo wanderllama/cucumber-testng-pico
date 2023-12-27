@@ -119,10 +119,10 @@ public abstract class PageObject extends Driver {
             WebDriverWait wait = new WebDriverWait(getWebDriver(), SHORT.waitTime());
             return wait.until(visibilityOfElementLocated(by));
         } catch (NoSuchElementException e) {
-            LOG.info(e.getMessage());
+            LOG.error(e.getMessage());
             return null;
         } catch (TimeoutException e) {
-            LOG.info(e.getMessage());
+            LOG.error(e.getMessage());
             return null;
         }
     }
@@ -370,7 +370,7 @@ public abstract class PageObject extends Driver {
             new WebDriverWait(getWebDriver(), SHORT.waitTime()).until(ExpectedConditions.presenceOfElementLocated(by));
 
         } catch (TimeoutException exception) {
-            LOG.info(exception.getMessage());
+            LOG.error(exception.getMessage());
             return false;
         }
         return true;

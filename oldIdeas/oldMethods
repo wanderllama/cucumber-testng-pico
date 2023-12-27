@@ -1,7 +1,7 @@
 public static void saveTokensToContext(ITestContext context, String... tokensArray) {
     for (String tokenName : tokensArray) {
         context.setAttribute(tokenName, tokenMap.get(tokenName));
-        LOG.info("%s token was saved to context with %s as the attribute key", tokenName);
+        LOG.error("%s token was saved to context with %s as the attribute key", tokenName);
     }
 }
 

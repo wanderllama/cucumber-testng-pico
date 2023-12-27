@@ -33,7 +33,8 @@ public class Hooks {
     @Before(order = 1)
     public void before() {
         if (TestContext.getGlobal() == null) {
-            LOG.info("================ BEFORE SUITE ================\n" +
+            LOG.error("\n" +
+                    "================ BEFORE SUITE =================\n" +
                     "========= HOPEFULLY WONT NEED TO READ =========");
             TestContext.setProperties(ConfigProperties.setupProperties()); // property files for data and configuration
 //            AccessToken.init(); // access/refresh token are saved to map in TestContext
@@ -43,14 +44,13 @@ public class Hooks {
 
     @Before(order = 2)
     public void before(Scenario method) {
-        LOG.info("its obvious but what else can I do... I want it to work");
         // set up the WebDriver and navigate to Login Page
         WebDriver driver = Driver.setupBeforeScenario();
 //        driver.(LOGIN);
 
         // gather/LOG scenario information, identify if scenario test Login page
         // if scenario doesn't test login page then marks scenario to use tokens
-//        LOG.info(aboutScenario(context, method));
+//        LOG.error(aboutScenario(context, method));
 
         // create scenarioCtx object and make it thread safe and accessible through the TestContext class
         ScenarioCtx scenarioCtx = new ScenarioCtx();
@@ -59,7 +59,7 @@ public class Hooks {
 
         // adds tokens to the WebDriver if scenario is not testing the login page
 //        if ((Boolean) context.getAttribute(REQUIRES_TOKENS)) {
-//            LOG.info("attempting to save tokens to WebDriver local storage for non login page scenario");
+//            LOG.error("attempting to save tokens to WebDriver local storage for non login page scenario");
 //            setAllLocalStorageTokens(context, driver, tokenArray);
 //            driver.navigate().refresh();
 //        }
@@ -93,6 +93,6 @@ public class Hooks {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(String.format("window.localStorage.setItem('%s','%s');",
                 tokenName, context.getAttribute(tokenName)));
-        LOG.info(String.format("%s saved to WebDriver local storage", tokenName));
+        LOG.error(String.format("%s saved to WebDriver local storage", tokenName));
     }
 }

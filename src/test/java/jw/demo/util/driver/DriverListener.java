@@ -1,6 +1,8 @@
 package jw.demo.util.driver;
 
+import jw.demo.util.Log;
 import jw.demo.util.Util;
+import lombok.SneakyThrows;
 import org.apache.logging.log4j.Logger;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
@@ -9,6 +11,7 @@ import org.testng.internal.BaseTestMethod;
 
 import java.lang.reflect.Field;
 
+@SuppressWarnings("DataFlowIssue")
 public class DriverListener implements IInvokedMethodListener {
 
     private static final Logger LOG;
@@ -19,18 +22,19 @@ public class DriverListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-        LOG.debug("BEGINNING: DriverListener.beforeInvocation");
+        LOG.error("BEGINNING: DriverListener.beforeInvocation");
         if (method.isTestMethod()) {
             Driver.setDriver();
         } else {
-            LOG.warn("Provided method is NOT a TestNG testMethod!!!");
+            LOG.error("Provided method is NOT a TestNG testMethod!!!");
         }
-        LOG.debug("END: DriverListener.beforeInvocation");
+        LOG.error("END: DriverListener.beforeInvocation");
     }
 
-    @Override
+
+    @Override @SneakyThrows
     public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-        LOG.debug("BEGINNING: DriverListener.afterInvocation");
+        LOG.error("BEGINNING: DriverListener.afterInvocation");
         if (method.isTestMethod()) {
             try {
                 String browser = Driver.getDriverBrowser();
@@ -41,16 +45,14 @@ public class DriverListener implements IInvokedMethodListener {
                 Field f = bm.getClass().getSuperclass().getDeclaredField("m_methodName");
                 f.setAccessible(true);
                 String newTestName = testResult.getTestContext().getCurrentXmlTest().getName() + " - " + bm.getMethodName() + " - " + browser;
-                LOG.info("Renaming test method name from: '" + bm.getMethodName() + "' to: '" + newTestName + "'");
+                LOG.error("Renaming test method name from: '" + bm.getMethodName() + "' to: '" + newTestName + "'");
                 f.set(bm, newTestName);
-            } catch (Exception ex) {
-                LOG.error("afterInvocation exception:\n" + ex.getMessage());
-                ex.printStackTrace();
+            } catch (Exception e) {
+                throw new Exception(Log.exceptionErrorMsg("DriverListener: afterInvocation exception", e));
             } finally {
-                // close the browser
                 Driver.quitDriver();
             }
         }
-        LOG.debug("END:DriverListener.afterInvocation");
+        LOG.error("END: DriverListener.afterInvocation");
     }
 }

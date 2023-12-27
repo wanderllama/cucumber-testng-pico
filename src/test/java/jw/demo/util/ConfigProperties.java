@@ -35,7 +35,7 @@ public class ConfigProperties {
         } catch (IOException e) {
             throw new IOException(Log.exceptionErrorMsg("Occurred While Reading Configuration File", e));
         }
-        LOG.info("Configuration.properties file loaded to properties obj");
+        LOG.error("Configuration.properties file loaded to properties obj");
         return properties;
     }
 
